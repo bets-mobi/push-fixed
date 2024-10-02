@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f9f4;
+            text-align: center;
+            padding-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        h1 {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <h1>Push Notifications Demo</h1>
+    <button id="notifyButton">Start Notifications</button>
+
+    <script>
+        // Check if notifications are supported by the browser
+        if ('Notification' in window) {
+            const notifyButton = document.getElementById('notifyButton');
+
+            notifyButton.addEventListener('click', () => {
+                // Request permission to show notifications
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        // Start sending notifications every 5 seconds for 30 seconds
+                        let count = 0;
+                        const interval = setInterval(() => {
+                            if (count < 6) {
+                                new Notification('Notification ' + (count + 1), {
+                                    body: `This is notification number ${count + 1}`,
+                                    icon: 'https://via.placeholder.com/100x100.png?text=Icon'
+                                });
+                                count++;
+                            } else {
+                                clearInterval(interval); // Stop after 6 notifications
+                            }
+                        }, 5000); // 5000ms = 5 seconds
+                    } else {
+                        alert('Notification permission denied.');
+                    }
+                });
+            });
+        } else {
+            alert('Your browser does not support notifications.');
+        }
+    </script>
+</body>
+</html>
