@@ -32,10 +32,13 @@
     <h1>Push Notifications Demo</h1>
     <button id="notifyButton">Start Notifications</button>
 
+    <audio id="notificationSound" src="https://actions.google.com/sounds/v1/alarms/medium_bell_ring.ogg"></audio>
+
     <script>
         // Check if notifications are supported by the browser
         if ('Notification' in window) {
             const notifyButton = document.getElementById('notifyButton');
+            const notificationSound = document.getElementById('notificationSound');
 
             notifyButton.addEventListener('click', () => {
                 // Request permission to show notifications
@@ -45,10 +48,38 @@
                         let count = 0;
                         const interval = setInterval(() => {
                             if (count < 6) {
-                                new Notification('Notification ' + (count + 1), {
-                                    body: `This is notification number ${count + 1}`,
-                                    icon: 'https://via.placeholder.com/100x100.png?text=Icon'
+                                const notification = new Notification('Notification ' + (count + 1), {
+                                    body: 'Click to visit mobitrans.net!',
+                                    icon: 'https://via.placeholder.com/100x100.png?text=Icon',
+                                    requireInteraction: true, // Stays until user clicks
+                                    actions: [
+                                        {
+                                            action: 'visit-site',
+                                            title: 'Visit Mobitrans',
+                                            icon: 'https://via.placeholder.com/50x50.png?text=Go'
+                                        },
+                                        {
+                                            action: 'close',
+                                            title: 'Close Notification',
+                                            icon: 'https://via.placeholder.com/50x50.png?text=Close'
+                                        }
+                                    ]
                                 });
+
+                                notification.onclick = function(event) {
+                                    event.preventDefault();
+                                    window.open('https://mobitrans.net', '_blank');
+                                };
+
+                                notification.addEventListener('notificationclick', function(event) {
+                                    if (event.action === 'visit-site') {
+                                        window.open('https://mobitrans.net', '_blank');
+                                    } else if (event.action === 'close') {
+                                        notification.close();
+                                    }
+                                });
+
+                                notificationSound.play();
                                 count++;
                             } else {
                                 clearInterval(interval); // Stop after 6 notifications
