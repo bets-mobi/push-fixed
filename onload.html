@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f9f4;
+            text-align: center;
+            padding-top: 50px;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        h1 {
+            color: #28a745;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Notifications Demo</h1>
+
+    <script>
+        // Register the service worker on page load
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js').then(function(reg) {
+                console.log('Service Worker Registered!', reg);
+
+                // Request notification permission on page load
+                Notification.requestPermission().then(function(permission) {
+                    if (permission === 'granted') {
+                        reg.showNotification('Hello!', {
+                            body: 'Notifications are enabled. Click to visit mobitrans.net!',
+                            icon: 'https://via.placeholder.com/100x100.png?text=Icon',
+                            actions: [
+                                {
+                                    action: 'visit-site',
+                                    title: 'Visit Mobitrans',
+                                    icon: 'https://via.placeholder.com/50x50.png?text=Go'
+                                }
+                            ]
+                        });
+                    }
+                });
+            }).catch(function(error) {
+                console.error('Service Worker Registration Failed:', error);
+            });
+        } else {
+            alert('Service Worker not supported in this browser.');
+        }
+    </script>
+</body>
+</html>
